@@ -30,6 +30,13 @@ ap-northeast-1
 aws sts get-caller-identity --profile aigc-3dgs
 ```
 
+当前本机已验证的 profile 信息：
+
+- profile：`aigc-3dgs`
+- account：`553432479592`
+- region：`ap-northeast-1`
+- IAM user：`arn:aws:iam::553432479592:user/grafana`
+
 ## 2. 推荐实例
 
 本项目轻量训练建议：

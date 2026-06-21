@@ -41,7 +41,7 @@
 
 ## Current Status
 
-项目已完成代码、文档、样例数据 GPU 训练验证、模型权重产出、本地 Git 提交、GitHub public 仓库推送、集群训练脚本、AWS EC2 训练说明，并新增换机续作交接文档。
+项目已完成代码、文档、样例数据 GPU 训练验证、模型权重产出、本地 Git 提交、GitHub public 仓库推送、集群训练脚本、AWS EC2 训练说明、AWS CLI/profile 配置验证，并新增换机续作交接文档。
 
 ## Recent Changes
 
@@ -59,12 +59,13 @@
 - 新增 `HANDOFF.md`，记录换电脑后恢复环境、继续训练、提交远程仓库和 Slurm/AWS 作业的步骤。
 - 创建并推送 GitHub public 仓库：`https://github.com/zh23jemu/AIGC-3DGS-Fusion`，默认分支为 `main`。
 - 新增 AWS EC2 公有云训练说明和 user-data 脚本，明确不保存 AWS 密钥，建议使用 AWS CLI profile 或 EC2 IAM Role。
+- 本机已安装 AWS CLI v2.35.9，并验证 `aigc-3dgs` profile 可访问账号 `553432479592`，当前 region 为 `ap-northeast-1`。
 
 ## Next TODO
 
 - 换电脑后可直接从 GitHub public 仓库拉取项目，并按 `HANDOFF.md` 恢复 `.venv`、验证 GPU。
 - AWS/Slurm 提交需要在有 `sbatch` 的集群环境执行。
-- 使用 AWS EC2 前需要安装 AWS CLI、配置新的未泄露密钥或 IAM Role，并确认 GPU 实例配额。
+- 使用 AWS EC2 前还需确认 GPU 实例配额、AMI、key pair、安全组和子网。
 
 ## Open Issues
 

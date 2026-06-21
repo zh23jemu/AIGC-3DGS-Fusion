@@ -153,6 +153,22 @@ sbatch slurm/train_toy_gpu_aws.sbatch
 sacctmgr show assoc user=$USER format=User,Account,Partition,QOS
 ```
 
+AWS CLI 状态：
+
+- 原电脑已安装 AWS CLI v2.35.9。
+- 已验证 `aigc-3dgs` profile。
+- AWS Account：`553432479592`
+- IAM User ARN：`arn:aws:iam::553432479592:user/grafana`
+- Region：`ap-northeast-1`
+
+继续启动 EC2 训练前，还需确认：
+
+- GPU 实例配额。
+- Deep Learning AMI ID。
+- EC2 key pair。
+- 安全组。
+- 子网。
+
 ## 7. 远程仓库待办
 
 当前还没有远程 public GitHub 仓库。换电脑后如果已有 GitHub CLI：
