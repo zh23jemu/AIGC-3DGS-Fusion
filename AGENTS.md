@@ -41,7 +41,7 @@
 
 ## Current Status
 
-项目已完成代码、文档、样例数据 GPU 训练验证、模型权重产出、本地 Git 提交、集群训练脚本，并新增换机续作交接文档。
+项目已完成代码、文档、样例数据 GPU 训练验证、模型权重产出、本地 Git 提交、GitHub public 仓库推送、集群训练脚本，并新增换机续作交接文档。
 
 ## Recent Changes
 
@@ -57,11 +57,12 @@
 - 按全局 Slurm 约定新增 `slurm/train_toy_gpu.sbatch` 和 `scripts/submit_slurm.md`，用于在集群登录节点提交训练。
 - 根据用户明确要求新增 `slurm/train_toy_gpu_aws.sbatch`，用于提交到 `aws` 分区，并保留费用提醒与分区覆盖说明。
 - 新增 `HANDOFF.md`，记录换电脑后恢复环境、继续训练、提交远程仓库和 Slurm/AWS 作业的步骤。
+- 创建并推送 GitHub public 仓库：`https://github.com/zh23jemu/AIGC-3DGS-Fusion`，默认分支为 `main`。
 
 ## Next TODO
 
-- 换电脑后按 `HANDOFF.md` 恢复 `.venv`、验证 GPU，并根据需要创建 public 远程仓库。
-- 创建 public 远程仓库仍需要可用 GitHub 凭据；AWS/Slurm 提交需要在有 `sbatch` 的集群环境执行。
+- 换电脑后可直接从 GitHub public 仓库拉取项目，并按 `HANDOFF.md` 恢复 `.venv`、验证 GPU。
+- AWS/Slurm 提交需要在有 `sbatch` 的集群环境执行。
 
 ## Open Issues
 
