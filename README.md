@@ -92,6 +92,12 @@ sbatch --partition=gpuHz slurm/train_toy_gpu.sbatch
 
 不建议默认使用 `aws` 分区，除非明确接受额外费用。
 
+如果明确要提交到 `aws` 分区：
+
+```bash
+sbatch slurm/train_toy_gpu_aws.sbatch
+```
+
 ## 目录说明
 
 - `src/aigc3dgs/`：核心代码。

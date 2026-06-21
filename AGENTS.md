@@ -55,6 +55,7 @@
 - 使用 GPU 完成 3000 steps、128 高斯、128x128 分辨率训练，训练阶段约 90.6 step/s，最终 loss 为 `0.01173052`。
 - 已统计官方推荐场景图片数量：`garden` 185、`bicycle` 194、`counter` 240。
 - 按全局 Slurm 约定新增 `slurm/train_toy_gpu.sbatch` 和 `scripts/submit_slurm.md`，用于在集群登录节点提交训练。
+- 根据用户明确要求新增 `slurm/train_toy_gpu_aws.sbatch`，用于提交到 `aws` 分区，并保留费用提醒与分区覆盖说明。
 
 ## Next TODO
 
