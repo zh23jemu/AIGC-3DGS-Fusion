@@ -7,10 +7,10 @@ set -euo pipefail
 
 REPO_URL="${REPO_URL:-https://github.com/zh23jemu/AIGC-3DGS-Fusion.git}"
 WORKDIR="${WORKDIR:-/home/ubuntu/AIGC-3DGS-Fusion}"
-PYTHON_BIN="${PYTHON_BIN:-python3}"
+PYTHON_BIN="${PYTHON_BIN:-python3.10}"
 
 sudo apt-get update
-sudo apt-get install -y git python3.11 python3.11-venv python3-pip
+sudo apt-get install -y git python3.10 python3.10-venv python3-pip
 
 if [ ! -d "$WORKDIR/.git" ]; then
   git clone "$REPO_URL" "$WORKDIR"
@@ -20,10 +20,16 @@ fi
 
 cd "$WORKDIR"
 
-python3.11 -m venv .venv
+${PYTHON_BIN} -m venv .venv
 .venv/bin/python -m pip install --upgrade pip
-.venv/bin/python -m pip install -e .
-.venv/bin/python -m pip install torch torchvision --index-url https://download.pytorch.org/whl/cu126
+# 先固定安装 CUDA 12.6 兼容的 PyTorch，再安装项目本身。
+# 这样可以避免 `pip install -e .` 根据 `torch>=2.3` 自动解析到更新但不稳定的 CUDA 13 wheel。
+.venv/bin/python -m pip install \
+  "torch==2.7.1+cu126" \
+  "torchvision==0.22.1+cu126" \
+  --index-url https://download.pytorch.org/whl/cu126
+.venv/bin/python -m pip install numpy pillow tqdm requests
+.venv/bin/python -m pip install --no-deps -e .
 
 .venv/bin/python - <<'PY'
 import torch
