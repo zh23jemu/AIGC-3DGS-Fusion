@@ -1,0 +1,32 @@
+# Python 本地环境与缓存
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+
+# 训练过程中的本地中间产物
+runs/
+
+# 官方 Mip-NeRF 360 数据集体积很大，仅忽略完整下载包和大场景目录；
+# 小型样例数据与最终权重是作业交付物，不做整体忽略。
+data/360_v2.zip
+data/360_extra_scenes.zip
+data/garden/
+data/bicycle/
+data/counter/
+data/kitchen/
+data/room/
+data/stump/
+data/bonsai/
+
+# 日志与本地配置
+*.log
+.env
+.env.*
+
+# 系统与编辑器文件
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

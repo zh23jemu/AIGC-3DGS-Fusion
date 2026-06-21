@@ -1,0 +1,6 @@
+numpy>=1.26
+pillow>=10.0
+tqdm>=4.66
+requests>=2.31
+torch>=2.3
+torchvision>=0.18
