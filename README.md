@@ -98,6 +98,15 @@ sbatch --partition=gpuHz slurm/train_toy_gpu.sbatch
 sbatch slurm/train_toy_gpu_aws.sbatch
 ```
 
+## AWS EC2 公有云训练
+
+如果使用 AWS EC2 GPU 实例训练，请参考：
+
+- `scripts/aws_ec2_train.md`
+- `scripts/aws_train_user_data.sh`
+
+不要把 AWS Access Key 或 Secret Access Key 写入仓库。建议使用 AWS CLI profile 或 EC2 IAM Role。
+
 ## 目录说明
 
 - `src/aigc3dgs/`：核心代码。

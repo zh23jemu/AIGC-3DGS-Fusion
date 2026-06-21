@@ -41,7 +41,7 @@
 
 ## Current Status
 
-项目已完成代码、文档、样例数据 GPU 训练验证、模型权重产出、本地 Git 提交、GitHub public 仓库推送、集群训练脚本，并新增换机续作交接文档。
+项目已完成代码、文档、样例数据 GPU 训练验证、模型权重产出、本地 Git 提交、GitHub public 仓库推送、集群训练脚本、AWS EC2 训练说明，并新增换机续作交接文档。
 
 ## Recent Changes
 
@@ -58,17 +58,20 @@
 - 根据用户明确要求新增 `slurm/train_toy_gpu_aws.sbatch`，用于提交到 `aws` 分区，并保留费用提醒与分区覆盖说明。
 - 新增 `HANDOFF.md`，记录换电脑后恢复环境、继续训练、提交远程仓库和 Slurm/AWS 作业的步骤。
 - 创建并推送 GitHub public 仓库：`https://github.com/zh23jemu/AIGC-3DGS-Fusion`，默认分支为 `main`。
+- 新增 AWS EC2 公有云训练说明和 user-data 脚本，明确不保存 AWS 密钥，建议使用 AWS CLI profile 或 EC2 IAM Role。
 
 ## Next TODO
 
 - 换电脑后可直接从 GitHub public 仓库拉取项目，并按 `HANDOFF.md` 恢复 `.venv`、验证 GPU。
 - AWS/Slurm 提交需要在有 `sbatch` 的集群环境执行。
+- 使用 AWS EC2 前需要安装 AWS CLI、配置新的未泄露密钥或 IAM Role，并确认 GPU 实例配额。
 
 ## Open Issues
 
 - 本机 GPU 可用，但 Quadro T1000 只有 4GB 显存，完整大场景训练可能受显存限制。
 - 官方 Mip-NeRF 360 主包已下载到 `data/360_v2.zip`，约 12.5GB，尚未解压。
 - 当前 Windows 本机没有 `sbatch`，不能直接提交 Slurm 作业；需在集群登录节点运行提交命令。
+- 用户曾在对话中暴露 AWS Access Key/Secret，必须在 AWS IAM 中禁用/删除后重新生成，不能继续使用暴露密钥。
 
 ## Architecture Decisions
 
