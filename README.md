@@ -74,6 +74,8 @@ py -3.11 -m venv .venv
 
 AWS EC2 `g4dn.xlarge` 训练结果已下载到 `weights/aws_ec2_toy_3dgs/`：`3000` steps、`128` 个高斯、`128x128` 分辨率，最终 loss 为 `0.01350455`，训练设备为 `Tesla T4`。
 
+为提升渲染质量，AWS user-data 脚本默认质量训练档已调整为 `10000` steps、`512` 个高斯、`128x128` 分辨率，输出目录为 `runs/aws_ec2_toy_3dgs_quality`。可通过环境变量 `STEPS`、`GAUSSIANS`、`IMAGE_SIZE`、`RUN_NAME` 覆盖。
+
 ## 测试命令
 
 ```powershell

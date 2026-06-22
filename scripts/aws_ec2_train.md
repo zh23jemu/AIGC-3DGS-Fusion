@@ -44,6 +44,7 @@ aws sts get-caller-identity --profile aigc-3dgs
 - `g4dn.xlarge`：1 张 NVIDIA T4，16GB 显存，性价比适合本实验。
 - AMI：Ubuntu 22.04 深度学习 AMI，或普通 Ubuntu 22.04 加 NVIDIA 驱动环境。
 - Python / PyTorch：EC2 启动脚本默认使用 `python3.10`，并固定安装 `torch==2.7.1+cu126`、`torchvision==0.22.1+cu126`，避免自动解析到 CUDA 13 wheel。
+- 默认质量训练参数：`10000` steps、`512` 个高斯、`128x128` 分辨率，输出目录为 `runs/aws_ec2_toy_3dgs_quality`。
 
 如果使用普通 Ubuntu AMI，需要额外安装 NVIDIA 驱动；为了减少配置风险，建议使用 AWS Deep Learning AMI。
 
@@ -116,3 +117,4 @@ aws ec2 terminate-instances --profile aigc-3dgs --instance-ids <INSTANCE_ID>
 - 已选择 `g4dn.xlarge` 作为本项目 AWS GPU 训练资源，原因是 T4 16GB 显存足够运行当前教学版 3DGS 训练，费用低于 `g5` / `g6`。
 - 首次实例 `i-00affb8095794efa5` 已验证 GPU 和 CUDA 可用，但因 pip 自动安装到 `torch 2.12.1+cu130` 后触发 Python 兼容问题，训练未完成，实例已停止以避免继续计费。
 - 已修正 `scripts/aws_train_user_data.sh`，固定 CUDA 12.6 PyTorch 版本并使用 `--no-deps` 安装项目，后续重新启动实例应使用修正版脚本。
+- 为提升渲染质量，已将 user-data 默认训练参数提升为 `10000` steps、`512` 个高斯，并通过环境变量 `STEPS`、`GAUSSIANS`、`IMAGE_SIZE`、`RUN_NAME` 支持覆盖。
