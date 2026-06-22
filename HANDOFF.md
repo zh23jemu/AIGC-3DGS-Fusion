@@ -38,6 +38,7 @@
 - `weights/toy_3dgs/`：早期 CPU 轻量训练权重。
 - `weights/toy_3dgs_gpu/`：GPU 版 800 steps 权重。
 - `weights/toy_3dgs_gpu_quality/`：GPU 版 3000 steps、128 高斯、128x128 分辨率权重。
+- `weights/aws_ec2_toy_3dgs/`：AWS EC2 `g4dn.xlarge` 训练权重，3000 steps、128 高斯、128x128 分辨率，final loss `0.01350455`，device `cuda`。
 
 官方 Mip-NeRF 360 主包曾在本机下载到：
 
@@ -171,18 +172,14 @@ AWS CLI 状态：
 
 ## 7. 远程仓库待办
 
-当前还没有远程 public GitHub 仓库。换电脑后如果已有 GitHub CLI：
+当前远程 public GitHub 仓库：
+
+- https://github.com/zh23jemu/AIGC-3DGS-Fusion
+
+换电脑后可直接克隆：
 
 ```bash
-gh repo create AIGC-3DGS-Fusion --public --source=. --remote=origin --push
-```
-
-如果手动在 GitHub 创建仓库：
-
-```bash
-git remote add origin https://github.com/<你的用户名>/AIGC-3DGS-Fusion.git
-git branch -M main
-git push -u origin main
+git clone https://github.com/zh23jemu/AIGC-3DGS-Fusion.git
 ```
 
 ## 8. 关键风险

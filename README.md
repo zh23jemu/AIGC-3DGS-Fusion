@@ -69,6 +69,10 @@ py -3.11 -m venv .venv
 - `weights/toy_3dgs_gpu/model_final.ply`
 - `weights/toy_3dgs_gpu_quality/model_final.pth`
 - `weights/toy_3dgs_gpu_quality/model_final.ply`
+- `weights/aws_ec2_toy_3dgs/model_final.pth`
+- `weights/aws_ec2_toy_3dgs/model_final.ply`
+
+AWS EC2 `g4dn.xlarge` 训练结果已下载到 `weights/aws_ec2_toy_3dgs/`：`3000` steps、`128` 个高斯、`128x128` 分辨率，最终 loss 为 `0.01350455`，训练设备为 `Tesla T4`。
 
 ## 测试命令
 
@@ -114,5 +118,5 @@ sbatch slurm/train_toy_gpu_aws.sbatch
 - `scripts/`：辅助说明和提交提示。
 - `data/`：本地数据目录，不纳入版本管理。
 - `runs/`：训练输出目录，不纳入版本管理。
-- `weights/`：整理后的模型权重目录，不纳入版本管理。
+- `weights/`：整理后的模型权重目录，小型作业交付权重纳入版本管理。
 - `report.md`：实验报告。

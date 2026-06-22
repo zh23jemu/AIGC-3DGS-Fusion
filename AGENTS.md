@@ -41,7 +41,7 @@
 
 ## Current Status
 
-项目已完成代码、文档、样例数据 GPU 训练验证、模型权重产出、本地 Git 提交、GitHub public 仓库推送、集群训练脚本、AWS EC2 训练说明、AWS CLI/profile 配置验证，并新增换机续作交接文档。当前 AWS GPU 资源已选择 `g4dn.xlarge`，首次 EC2 训练因 PyTorch 自动解析到 CUDA 13 wheel 导致兼容错误，旧实例已停止，训练脚本已改为固定 CUDA 12.6 PyTorch。
+项目已完成代码、文档、样例数据 GPU 训练验证、模型权重产出、本地 Git 提交、GitHub public 仓库推送、集群训练脚本、AWS EC2 训练说明、AWS CLI/profile 配置验证，并新增换机续作交接文档。AWS 公有云训练已使用 `g4dn.xlarge` 完成，产物已下载到本地 `weights/aws_ec2_toy_3dgs/`，相关 EC2 实例已发起终止。
 
 ## Recent Changes
 
@@ -63,12 +63,16 @@
 - 选择 `g4dn.xlarge` 作为 AWS 训练实例，首次实例 `i-00affb8095794efa5` 验证到 `Tesla T4` 与 CUDA 可用，但 `torch 2.12.1+cu130` 在 Python 环境中触发 `sys.get_int_max_str_digits` 缺失，训练失败。
 - 已停止失败实例 `i-00affb8095794efa5`，避免继续产生 GPU 实例费用。
 - 更新 `scripts/aws_train_user_data.sh`：EC2 默认使用 `python3.10`，固定安装 `torch==2.7.1+cu126` / `torchvision==0.22.1+cu126`，再用 `--no-deps` 安装本项目，避免 PyTorch 被自动升级。
+- 使用修正版 user-data 在 `i-0ad699fcb01e110b8` 上完成 AWS EC2 `g4dn.xlarge` 训练，训练设备为 `Tesla T4`，配置为 3000 steps、128 高斯、128x128 分辨率，最终 loss 为 `0.01350455`。
+- 已通过 EC2 Instance Connect 注入一次性 SSH key，下载远端权重、PLY、metrics 和渲染图；权重整理到 `weights/aws_ec2_toy_3dgs/`，渲染图保留在本地 `runs/aws_ec2_toy_3dgs/`。
+- 已对两台 EC2 实例 `i-00affb8095794efa5` 和 `i-0ad699fcb01e110b8` 发起终止，避免继续产生实例与 EBS 费用。
 
 ## Next TODO
 
 - 换电脑后可直接从 GitHub public 仓库拉取项目，并按 `HANDOFF.md` 恢复 `.venv`、验证 GPU。
 - AWS/Slurm 提交需要在有 `sbatch` 的集群环境执行。
-- 使用修正版 AWS user-data 重新启动 `g4dn.xlarge` 实例，观察 cloud-init 日志并确认训练产出。
+- 确认第二台 AWS EC2 实例最终进入 `terminated` 状态。
+- 将 AWS 训练权重和文档更新提交并推送到 GitHub。
 
 ## Open Issues
 
@@ -76,7 +80,7 @@
 - 官方 Mip-NeRF 360 主包已下载到 `data/360_v2.zip`，约 12.5GB，尚未解压。
 - 当前 Windows 本机没有 `sbatch`，不能直接提交 Slurm 作业；需在集群登录节点运行提交命令。
 - 用户曾在对话中暴露 AWS Access Key/Secret，必须在 AWS IAM 中禁用/删除后重新生成，不能继续使用暴露密钥。
-- AWS 训练产物仍在远端实例本地磁盘；训练成功后需要及时下载或同步，并停止/终止实例控制费用。
+- 本地 `runs/aws_ec2_toy_3dgs/` 中保存了 AWS 渲染图，但 `runs/` 仍按 `.gitignore` 作为可再生成输出不提交。
 
 ## Architecture Decisions
 
@@ -85,4 +89,5 @@
 - `data/toy_scene` 与 `weights/toy_3dgs` 属于当前交付物；`runs/` 属于可再生成训练输出。
 - GPU 版最终权重整理到 `weights/toy_3dgs_gpu`，CPU 版早期权重仍保留在 `weights/toy_3dgs` 便于对比。
 - 更高分辨率 GPU 质量测试权重整理到 `weights/toy_3dgs_gpu_quality`。
+- AWS EC2 训练权重整理到 `weights/aws_ec2_toy_3dgs`，作为云端训练结果交付物入库。
 - 新增 Slurm 训练脚本 `slurm/train_toy_gpu.sbatch`，默认使用 `gpu` 分区、`gpo-ifv7xx` 账号和 `normal` QOS，避免默认使用 `aws` 分区。

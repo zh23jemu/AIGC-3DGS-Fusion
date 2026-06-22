@@ -24,6 +24,7 @@ data/bonsai/
 *.log
 .env
 .env.*
+.tmp/
 
 # 系统与编辑器文件
 .DS_Store
