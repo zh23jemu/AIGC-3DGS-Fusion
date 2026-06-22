@@ -41,7 +41,7 @@
 
 ## Current Status
 
-项目已完成代码、文档、样例数据 GPU 训练验证、模型权重产出、本地 Git 提交、GitHub public 仓库推送、集群训练脚本、AWS EC2 训练说明、AWS CLI/profile 配置验证，并新增换机续作交接文档。AWS 公有云基础训练已使用 `g4dn.xlarge` 完成，产物已下载到本地 `weights/aws_ec2_toy_3dgs/`。当前正在准备更高质量 AWS 训练，目标为 `10000` steps、`512` 高斯、`128x128` 分辨率。
+项目已完成代码、文档、样例数据 GPU 训练验证、模型权重产出、本地 Git 提交、GitHub public 仓库推送、集群训练脚本、AWS EC2 训练说明、AWS CLI/profile 配置验证，并新增换机续作交接文档。AWS 公有云质量训练已使用 `g4dn.xlarge` 完成，产物已下载到本地 `weights/aws_ec2_toy_3dgs_quality/`，当前推荐该权重作为最终提交结果。
 
 ## Recent Changes
 
@@ -67,12 +67,16 @@
 - 已通过 EC2 Instance Connect 注入一次性 SSH key，下载远端权重、PLY、metrics 和渲染图；权重整理到 `weights/aws_ec2_toy_3dgs/`，渲染图保留在本地 `runs/aws_ec2_toy_3dgs/`。
 - 已对两台 EC2 实例 `i-00affb8095794efa5` 和 `i-0ad699fcb01e110b8` 发起终止，避免继续产生实例与 EBS 费用。
 - 将 `scripts/aws_train_user_data.sh` 参数化，默认质量训练配置提升为 `10000` steps、`512` 高斯、`128x128` 分辨率，输出目录为 `runs/aws_ec2_toy_3dgs_quality`。
+- 使用新实例 `i-02ddca258856fc5bf` 完成 AWS EC2 质量训练，训练设备为 `Tesla T4`，配置为 10000 steps、512 高斯、128x128 分辨率，最终 loss 为 `0.00925142`。
+- 已通过 EC2 Instance Connect 下载质量版权重、PLY、metrics 和渲染图；权重整理到 `weights/aws_ec2_toy_3dgs_quality/`，渲染图保留在本地 `runs/aws_ec2_toy_3dgs_quality/`。
+- 已对质量训练实例 `i-02ddca258856fc5bf` 发起终止，避免继续产生实例与 EBS 费用。
 
 ## Next TODO
 
 - 换电脑后可直接从 GitHub public 仓库拉取项目，并按 `HANDOFF.md` 恢复 `.venv`、验证 GPU。
 - AWS/Slurm 提交需要在有 `sbatch` 的集群环境执行。
-- 启动新的 `g4dn.xlarge` 实例执行质量训练，完成后下载 `weights/aws_ec2_toy_3dgs_quality/` 并终止实例。
+- 确认质量训练实例 `i-02ddca258856fc5bf` 最终进入 `terminated` 状态。
+- 提交并推送 AWS 质量版权重与文档更新。
 
 ## Open Issues
 
@@ -90,4 +94,5 @@
 - GPU 版最终权重整理到 `weights/toy_3dgs_gpu`，CPU 版早期权重仍保留在 `weights/toy_3dgs` 便于对比。
 - 更高分辨率 GPU 质量测试权重整理到 `weights/toy_3dgs_gpu_quality`。
 - AWS EC2 训练权重整理到 `weights/aws_ec2_toy_3dgs`，作为云端训练结果交付物入库。
+- AWS EC2 质量训练权重整理到 `weights/aws_ec2_toy_3dgs_quality`，作为当前推荐最终交付权重入库。
 - 新增 Slurm 训练脚本 `slurm/train_toy_gpu.sbatch`，默认使用 `gpu` 分区、`gpo-ifv7xx` 账号和 `normal` QOS，避免默认使用 `aws` 分区。
