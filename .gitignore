@@ -25,6 +25,7 @@ data/bonsai/
 .env
 .env.*
 .tmp/
+deliverables/
 
 # 系统与编辑器文件
 .DS_Store
