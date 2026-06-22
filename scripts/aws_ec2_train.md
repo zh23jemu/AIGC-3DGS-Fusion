@@ -118,3 +118,4 @@ aws ec2 terminate-instances --profile aigc-3dgs --instance-ids <INSTANCE_ID>
 - 首次实例 `i-00affb8095794efa5` 已验证 GPU 和 CUDA 可用，但因 pip 自动安装到 `torch 2.12.1+cu130` 后触发 Python 兼容问题，训练未完成，实例已停止以避免继续计费。
 - 已修正 `scripts/aws_train_user_data.sh`，固定 CUDA 12.6 PyTorch 版本并使用 `--no-deps` 安装项目，后续重新启动实例应使用修正版脚本。
 - 为提升渲染质量，已将 user-data 默认训练参数提升为 `10000` steps、`512` 个高斯，并通过环境变量 `STEPS`、`GAUSSIANS`、`IMAGE_SIZE`、`RUN_NAME` 支持覆盖。
+- 新增 `scripts/aws_train_quality_sweep_user_data.sh`，用于继续迭代质量训练，默认依次运行 `20000 steps / 1024 gaussians` 与 `40000 steps / 2048 gaussians` 两档，用于判断继续增大训练量是否还有明显收益。

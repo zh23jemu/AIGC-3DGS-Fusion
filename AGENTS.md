@@ -41,7 +41,7 @@
 
 ## Current Status
 
-项目已完成代码、文档、样例数据 GPU 训练验证、模型权重产出、本地 Git 提交、GitHub public 仓库推送、集群训练脚本、AWS EC2 训练说明、AWS CLI/profile 配置验证，并新增换机续作交接文档。AWS 公有云质量训练已使用 `g4dn.xlarge` 完成，产物已下载到本地 `weights/aws_ec2_toy_3dgs_quality/`，当前推荐该权重作为最终提交结果。
+项目已完成代码、文档、样例数据 GPU 训练验证、模型权重产出、本地 Git 提交、GitHub public 仓库推送、集群训练脚本、AWS EC2 训练说明、AWS CLI/profile 配置验证，并新增换机续作交接文档。AWS 公有云质量训练已使用 `g4dn.xlarge` 完成，产物已下载到本地 `weights/aws_ec2_toy_3dgs_quality/`。当前根据用户要求继续迭代训练，准备运行质量 sweep：`20000/1024/128` 与 `40000/2048/128`。
 
 ## Recent Changes
 
@@ -70,13 +70,14 @@
 - 使用新实例 `i-02ddca258856fc5bf` 完成 AWS EC2 质量训练，训练设备为 `Tesla T4`，配置为 10000 steps、512 高斯、128x128 分辨率，最终 loss 为 `0.00925142`。
 - 已通过 EC2 Instance Connect 下载质量版权重、PLY、metrics 和渲染图；权重整理到 `weights/aws_ec2_toy_3dgs_quality/`，渲染图保留在本地 `runs/aws_ec2_toy_3dgs_quality/`。
 - 已对质量训练实例 `i-02ddca258856fc5bf` 发起终止，避免继续产生实例与 EBS 费用。
+- 新增 `scripts/aws_train_quality_sweep_user_data.sh`，用于在一台 `g4dn.xlarge` 上连续运行 `20000 steps / 1024 gaussians` 和 `40000 steps / 2048 gaussians` 两档训练，以判断收益是否趋于饱和。
 
 ## Next TODO
 
 - 换电脑后可直接从 GitHub public 仓库拉取项目，并按 `HANDOFF.md` 恢复 `.venv`、验证 GPU。
 - AWS/Slurm 提交需要在有 `sbatch` 的集群环境执行。
-- 确认质量训练实例 `i-02ddca258856fc5bf` 最终进入 `terminated` 状态。
-- 提交并推送 AWS 质量版权重与文档更新。
+- 启动 AWS quality sweep 实例，下载两档权重和渲染结果，比较 loss 与视觉效果。
+- 如果 `40000/2048` 相对 `20000/1024` 提升很小，停止继续加码，并将最佳权重作为最终成果。
 
 ## Open Issues
 
