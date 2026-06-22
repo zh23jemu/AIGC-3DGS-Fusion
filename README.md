@@ -73,10 +73,16 @@ py -3.11 -m venv .venv
 - `weights/aws_ec2_toy_3dgs/model_final.ply`
 - `weights/aws_ec2_toy_3dgs_quality/model_final.pth`
 - `weights/aws_ec2_toy_3dgs_quality/model_final.ply`
+- `weights/aws_ec2_toy_3dgs_q2_20k_1024/model_final.pth`
+- `weights/aws_ec2_toy_3dgs_q2_20k_1024/model_final.ply`
+- `weights/aws_ec2_toy_3dgs_q3_40k_2048/model_final.pth`
+- `weights/aws_ec2_toy_3dgs_q3_40k_2048/model_final.ply`
 
 AWS EC2 `g4dn.xlarge` 训练结果已下载到 `weights/aws_ec2_toy_3dgs/`：`3000` steps、`128` 个高斯、`128x128` 分辨率，最终 loss 为 `0.01350455`，训练设备为 `Tesla T4`。
 
 AWS EC2 质量训练结果已下载到 `weights/aws_ec2_toy_3dgs_quality/`：`10000` steps、`512` 个高斯、`128x128` 分辨率，最终 loss 为 `0.00925142`，训练设备为 `Tesla T4`。该版本是当前推荐提交权重。
+
+继续迭代后，当前最佳权重为 `weights/aws_ec2_toy_3dgs_q2_20k_1024/`：`20000` steps、`1024` 个高斯、`128x128` 分辨率，最终 loss 为 `0.00914205`。继续加大到 `40000` steps、`2048` 个高斯后，loss 退化为 `0.01122936`，因此停止继续加码训练，推荐使用 q2 权重作为最终成果。
 
 AWS user-data 脚本默认质量训练档为 `10000` steps、`512` 个高斯、`128x128` 分辨率，输出目录为 `runs/aws_ec2_toy_3dgs_quality`。可通过环境变量 `STEPS`、`GAUSSIANS`、`IMAGE_SIZE`、`RUN_NAME` 覆盖。
 

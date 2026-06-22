@@ -40,6 +40,8 @@
 - `weights/toy_3dgs_gpu_quality/`：GPU 版 3000 steps、128 高斯、128x128 分辨率权重。
 - `weights/aws_ec2_toy_3dgs/`：AWS EC2 `g4dn.xlarge` 训练权重，3000 steps、128 高斯、128x128 分辨率，final loss `0.01350455`，device `cuda`。
 - `weights/aws_ec2_toy_3dgs_quality/`：AWS EC2 `g4dn.xlarge` 质量训练权重，10000 steps、512 高斯、128x128 分辨率，final loss `0.00925142`，device `cuda`，当前推荐作为最终提交权重。
+- `weights/aws_ec2_toy_3dgs_q2_20k_1024/`：AWS EC2 质量迭代最佳权重，20000 steps、1024 高斯、128x128 分辨率，final loss `0.00914205`，device `cuda`，当前最终推荐成果。
+- `weights/aws_ec2_toy_3dgs_q3_40k_2048/`：AWS EC2 质量迭代对照权重，40000 steps、2048 高斯、128x128 分辨率，final loss `0.01122936`，相比 q2 退化，因此不作为最终推荐。
 
 官方 Mip-NeRF 360 主包曾在本机下载到：
 

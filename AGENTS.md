@@ -41,7 +41,7 @@
 
 ## Current Status
 
-项目已完成代码、文档、样例数据 GPU 训练验证、模型权重产出、本地 Git 提交、GitHub public 仓库推送、集群训练脚本、AWS EC2 训练说明、AWS CLI/profile 配置验证，并新增换机续作交接文档。AWS 公有云质量训练已使用 `g4dn.xlarge` 完成，产物已下载到本地 `weights/aws_ec2_toy_3dgs_quality/`。当前根据用户要求继续迭代训练，准备运行质量 sweep：`20000/1024/128` 与 `40000/2048/128`。
+项目已完成代码、文档、样例数据 GPU 训练验证、模型权重产出、本地 Git 提交、GitHub public 仓库推送、集群训练脚本、AWS EC2 训练说明、AWS CLI/profile 配置验证，并新增换机续作交接文档。AWS 质量迭代训练已完成，当前最佳成果为 `weights/aws_ec2_toy_3dgs_q2_20k_1024/`，配置 `20000 steps / 1024 gaussians / 128x128`，final loss `0.00914205`。
 
 ## Recent Changes
 
@@ -71,13 +71,17 @@
 - 已通过 EC2 Instance Connect 下载质量版权重、PLY、metrics 和渲染图；权重整理到 `weights/aws_ec2_toy_3dgs_quality/`，渲染图保留在本地 `runs/aws_ec2_toy_3dgs_quality/`。
 - 已对质量训练实例 `i-02ddca258856fc5bf` 发起终止，避免继续产生实例与 EBS 费用。
 - 新增 `scripts/aws_train_quality_sweep_user_data.sh`，用于在一台 `g4dn.xlarge` 上连续运行 `20000 steps / 1024 gaussians` 和 `40000 steps / 2048 gaussians` 两档训练，以判断收益是否趋于饱和。
+- 使用 sweep 实例 `i-0654de69b54b9cd44` 完成两档质量迭代：q2 final loss `0.00914205`，q3 final loss `0.01122936`。
+- q2 相对 q1 仅小幅提升但仍为最低 loss；q3 增加到 2048 高斯和 40000 步后退化，因此判定继续加码没有明显收益，停止迭代。
+- 已下载 q2/q3 权重、PLY、metrics 和渲染图；q2 权重整理到 `weights/aws_ec2_toy_3dgs_q2_20k_1024/`，作为当前最终推荐成果。
+- 已对 sweep 实例 `i-0654de69b54b9cd44` 发起终止，避免继续产生实例与 EBS 费用。
 
 ## Next TODO
 
 - 换电脑后可直接从 GitHub public 仓库拉取项目，并按 `HANDOFF.md` 恢复 `.venv`、验证 GPU。
 - AWS/Slurm 提交需要在有 `sbatch` 的集群环境执行。
-- 启动 AWS quality sweep 实例，下载两档权重和渲染结果，比较 loss 与视觉效果。
-- 如果 `40000/2048` 相对 `20000/1024` 提升很小，停止继续加码，并将最佳权重作为最终成果。
+- 确认 sweep 实例 `i-0654de69b54b9cd44` 最终进入 `terminated` 状态。
+- 提交并推送 q2/q3 质量迭代权重和文档更新。
 
 ## Open Issues
 
@@ -96,4 +100,5 @@
 - 更高分辨率 GPU 质量测试权重整理到 `weights/toy_3dgs_gpu_quality`。
 - AWS EC2 训练权重整理到 `weights/aws_ec2_toy_3dgs`，作为云端训练结果交付物入库。
 - AWS EC2 质量训练权重整理到 `weights/aws_ec2_toy_3dgs_quality`，作为当前推荐最终交付权重入库。
+- AWS EC2 q2 质量迭代权重整理到 `weights/aws_ec2_toy_3dgs_q2_20k_1024`，作为当前最终推荐成果；q3 权重保留用于证明继续加码退化。
 - 新增 Slurm 训练脚本 `slurm/train_toy_gpu.sbatch`，默认使用 `gpu` 分区、`gpo-ifv7xx` 账号和 `normal` QOS，避免默认使用 `aws` 分区。

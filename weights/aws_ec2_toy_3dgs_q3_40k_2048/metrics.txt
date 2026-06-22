@@ -1,0 +1,4 @@
+final_loss=0.01122936
+steps=40000
+gaussians=2048
+device=cuda
