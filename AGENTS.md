@@ -75,13 +75,13 @@
 - q2 相对 q1 仅小幅提升但仍为最低 loss；q3 增加到 2048 高斯和 40000 步后退化，因此判定继续加码没有明显收益，停止迭代。
 - 已下载 q2/q3 权重、PLY、metrics 和渲染图；q2 权重整理到 `weights/aws_ec2_toy_3dgs_q2_20k_1024/`，作为当前最终推荐成果。
 - 已对 sweep 实例 `i-0654de69b54b9cd44` 发起终止，避免继续产生实例与 EBS 费用。
+- 根据用户要求统一 `report.md` 的实验叙述口径，不再同时写“本机环境”和“AWS 环境”两套表述，改为统一 GPU 训练流程并突出最终 q2 结果。
 
 ## Next TODO
 
 - 换电脑后可直接从 GitHub public 仓库拉取项目，并按 `HANDOFF.md` 恢复 `.venv`、验证 GPU。
 - AWS/Slurm 提交需要在有 `sbatch` 的集群环境执行。
-- 确认 sweep 实例 `i-0654de69b54b9cd44` 最终进入 `terminated` 状态。
-- 提交并推送 q2/q3 质量迭代权重和文档更新。
+- 提交并推送报告口径统一更新。
 
 ## Open Issues
 
