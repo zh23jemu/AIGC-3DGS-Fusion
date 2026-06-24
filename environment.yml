@@ -10,6 +10,9 @@ dependencies:
   - pillow
   - tqdm
   - requests
+  - imageio
+  - imageio-ffmpeg
+  - matplotlib
   - pytorch
   - torchvision
   - pytorch-cuda=12.1
