@@ -41,7 +41,7 @@
 
 ## Current Status
 
-项目已完成代码、文档、样例数据 GPU 训练验证、模型权重产出、本地 Git 提交、GitHub public 仓库推送、集群训练脚本、AWS EC2 训练说明、AWS CLI/profile 配置验证，并新增换机续作交接文档。AWS 质量迭代训练已完成，当前最佳成果为 `weights/aws_ec2_toy_3dgs_q2_20k_1024/`，配置 `20000 steps / 1024 gaussians / 128x128`，final loss `0.00914205`。针对交付反馈“题目一 1/3/4 在 zip 的代码和报告里没看到”，已补充资产准备、场景融合和质量评估三个代码入口，并更新报告中的要求映射。
+项目已完成代码、文档、样例数据 GPU 训练验证、模型权重产出、本地 Git 提交、GitHub public 仓库推送、集群训练脚本、AWS EC2 训练说明、AWS CLI/profile 配置验证，并新增换机续作交接文档。AWS 质量迭代训练已完成，当前最佳成果为 `weights/aws_ec2_toy_3dgs_q2_20k_1024/`，配置 `20000 steps / 1024 gaussians / 128x128`，final loss `0.00914205`。当前 AWS 现有实例 `i-0aa6eab937bac550d` 仍处于 `running`，并已临时附加 `AmazonSSMManagedInstanceCore`，但 EC2 Instance Connect 注入一次性 SSH key 后仍返回 `Permission denied (publickey)`，因此这台机当前不能直接热更新训练，只能继续排查接管方式或改走新实例。针对交付反馈“题目一 1/3/4 在 zip 的代码和报告里没看到”，已补充资产准备、场景融合和质量评估三个代码入口，并更新报告中的要求映射。
 
 ## Recent Changes
 
@@ -96,6 +96,7 @@
 - 当前 Windows 本机没有 `sbatch`，不能直接提交 Slurm 作业；需在集群登录节点运行提交命令。
 - 用户曾在对话中暴露 AWS Access Key/Secret，必须在 AWS IAM 中禁用/删除后重新生成，不能继续使用暴露密钥。
 - 本地 `runs/aws_ec2_toy_3dgs/` 中保存了 AWS 渲染图，但 `runs/` 仍按 `.gitignore` 作为可再生成输出不提交。
+- 当前现有 AWS 实例虽在运行，但尚未建立可用登录通道，原地更新训练暂时受阻。
 - 修正版交付包诚实标注：A 多视角 3DGS 分支已实际训练，B/C 的 threestudio 与 Zero123 分支提供接入清单和融合接口，未伪称已经完成外部长训练生成结果。
 
 ## Architecture Decisions
