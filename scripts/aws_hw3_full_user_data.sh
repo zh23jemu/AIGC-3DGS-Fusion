@@ -90,6 +90,10 @@ for line in lines:
         patched.append("# installed in Dockerfile with --no-build-isolation: " + line)
     elif line.startswith("git+https://github.com/NVlabs/nvdiffrast.git"):
         patched.append("# installed in Dockerfile with --no-build-isolation: " + line)
+    elif line.strip() == "libigl":
+        # threestudio 的 mesh 后处理会调用 igl.fast_winding_number_for_meshes，
+        # libigl 2.6.x 的 manylinux 轮子已移除该符号，必须固定到 2.5.1。
+        patched.append("libigl==2.5.1")
     else:
         patched.append(line)
 req.write_text("\n".join(patched) + "\n", encoding="utf-8")
