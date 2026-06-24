@@ -18,6 +18,12 @@ B_PROMPT="${B_PROMPT:-a small blue ceramic rabbit figurine, smooth surface, stud
 B_STEPS="${B_STEPS:-800}"
 C_STEPS="${C_STEPS:-600}"
 
+# g6.xlarge 使用 NVIDIA L4（Ada Lovelace，Compute Capability 8.9）。
+# threestudio 依赖的 nerfacc / tiny-cuda-nn / nvdiffrast 都会编译 CUDA 扩展；
+# 如果不限制架构，pip 构建阶段会为多代 GPU 生成代码，耗时远超实际训练。
+export TORCH_CUDA_ARCH_LIST="${TORCH_CUDA_ARCH_LIST:-8.9}"
+export TCNN_CUDA_ARCHITECTURES="${TCNN_CUDA_ARCHITECTURES:-89}"
+
 WORK_ROOT="/opt/dlami/nvme/${RUN_NAME}"
 if [ ! -d /opt/dlami/nvme ]; then
   WORK_ROOT="/opt/${RUN_NAME}"
@@ -46,6 +52,12 @@ from pathlib import Path
 
 dockerfile = Path("threestudio/docker/Dockerfile")
 text = dockerfile.read_text(encoding="utf-8")
+text = text.replace(
+    "FROM nvidia/cuda:11.8.0-devel-ubuntu22.04",
+    "FROM nvidia/cuda:11.8.0-devel-ubuntu22.04\n"
+    "ENV TORCH_CUDA_ARCH_LIST=8.9\n"
+    "ENV TCNN_CUDA_ARCHITECTURES=89",
+)
 text = text.replace(
     "RUN pip install git+https://github.com/KAIR-BAIR/nerfacc.git@v0.5.2",
     "RUN pip install --no-build-isolation git+https://github.com/KAIR-BAIR/nerfacc.git@v0.5.2",
