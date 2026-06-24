@@ -37,6 +37,45 @@ cd "${WORK_ROOT}"
 git clone --depth 1 "${PROJECT_REPO}" project
 git clone --depth 1 https://github.com/threestudio-project/threestudio.git threestudio
 
+# threestudio 官方 Dockerfile 中的 nerfacc / tiny-cuda-nn 依赖会在 PEP517
+# build isolation 环境里构建，隔离环境看不到前一步安装的 torch，容易触发
+# `ModuleNotFoundError: No module named 'torch'`。这里在构建前做最小 patch：
+# 禁用 build isolation，并让 requirements 中的同类依赖复用已安装结果。
+python3 - <<'PY'
+from pathlib import Path
+
+dockerfile = Path("threestudio/docker/Dockerfile")
+text = dockerfile.read_text(encoding="utf-8")
+text = text.replace(
+    "RUN pip install git+https://github.com/KAIR-BAIR/nerfacc.git@v0.5.2",
+    "RUN pip install --no-build-isolation git+https://github.com/KAIR-BAIR/nerfacc.git@v0.5.2",
+)
+text = text.replace(
+    "RUN pip install git+https://github.com/NVlabs/tiny-cuda-nn.git#subdirectory=bindings/torch",
+    "RUN pip install --no-build-isolation git+https://github.com/NVlabs/tiny-cuda-nn.git#subdirectory=bindings/torch",
+)
+text = text.replace(
+    "COPY requirements.txt /tmp\nRUN cd /tmp && pip install -r requirements.txt",
+    "RUN pip install --no-build-isolation git+https://github.com/NVlabs/nvdiffrast.git\nCOPY requirements.txt /tmp\nRUN cd /tmp && pip install -r requirements.txt",
+)
+dockerfile.write_text(text, encoding="utf-8")
+
+req = Path("threestudio/requirements.txt")
+lines = req.read_text(encoding="utf-8").splitlines()
+patched = []
+for line in lines:
+    if line.startswith("git+https://github.com/KAIR-BAIR/nerfacc.git"):
+        patched.append("# installed in Dockerfile with --no-build-isolation: " + line)
+    elif line.startswith("git+https://github.com/NVlabs/tiny-cuda-nn/"):
+        patched.append("# installed in Dockerfile with --no-build-isolation: " + line)
+    elif line.startswith("git+https://github.com/NVlabs/nvdiffrast.git"):
+        patched.append("# installed in Dockerfile with --no-build-isolation: " + line)
+    else:
+        patched.append(line)
+req.write_text("\n".join(patched) + "\n", encoding="utf-8")
+print("patched threestudio docker dependencies")
+PY
+
 # 准备单图到 3D 的输入。宿主机 AMI 默认未安装 Pillow，因此这里只复制原图；
 # RGBA 去背景处理放到 threestudio 容器内部执行。
 mkdir -p threestudio/load/images
