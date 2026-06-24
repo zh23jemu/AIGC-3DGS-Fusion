@@ -70,7 +70,11 @@ text = text.replace(
 )
 text = text.replace(
     "COPY requirements.txt /tmp\nRUN cd /tmp && pip install -r requirements.txt",
-    "RUN pip install --no-build-isolation git+https://github.com/NVlabs/nvdiffrast.git\nCOPY requirements.txt /tmp\nRUN cd /tmp && pip install -r requirements.txt",
+    "RUN pip install --no-build-isolation git+https://github.com/NVlabs/nvdiffrast.git\n"
+    "COPY requirements.txt /tmp\n"
+    "RUN printf 'torch==2.0.1+cu118\\ntorchvision==0.15.2+cu118\\n' > /tmp/torch-constraints.txt "
+    "&& cd /tmp && pip install -r requirements.txt -c /tmp/torch-constraints.txt "
+    "--extra-index-url https://download.pytorch.org/whl/cu118",
 )
 dockerfile.write_text(text, encoding="utf-8")
 
