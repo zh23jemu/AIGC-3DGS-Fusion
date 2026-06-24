@@ -108,9 +108,9 @@ docker build -t aigc-threestudio:hw3 -f docker/Dockerfile .
 cat > "${WORK_ROOT}/run_inside_container.sh" <<'EOS'
 #!/usr/bin/env bash
 set -euxo pipefail
-cd /workspace/threestudio
+cd /workspace/results
 
-mkdir -p load/zero123 outputs
+mkdir -p load/zero123 outputs object_b object_c
 
 echo "===== PyTorch check ====="
 python - <<'PY'
@@ -125,8 +125,8 @@ python - <<'PY'
 from pathlib import Path
 from PIL import Image
 
-src = Path("load/images/hw3_object_c_source.png")
-dst = Path("load/images/hw3_object_c_rgba.png")
+src = Path("/workspace/threestudio/load/images/hw3_object_c_source.png")
+dst = Path("/workspace/results/load/zero123/hw3_object_c_rgba.png")
 img = Image.open(src).convert("RGBA").resize((256, 256))
 pixels = []
 for r, g, b, a in img.getdata():
@@ -138,8 +138,8 @@ print(dst, dst.stat().st_size)
 PY
 
 echo "===== Object B: threestudio DreamFusion-SD text-to-3D ====="
-python launch.py \
-  --config configs/dreamfusion-sd.yaml \
+python /workspace/threestudio/launch.py \
+  --config /workspace/threestudio/configs/dreamfusion-sd.yaml \
   --train --gpu 0 \
   system.prompt_processor.prompt="${B_PROMPT}" \
   trainer.max_steps="${B_STEPS}" \
@@ -147,14 +147,14 @@ python launch.py \
   system.freq.guidance_eval=0 \
   2>&1 | tee /workspace/results/object_b_threestudio_train.log
 
-B_TRIAL="$(find outputs -path '*ckpts/last.ckpt' -print | sort | tail -n 1 | sed 's#/ckpts/last.ckpt##')"
+B_TRIAL="$(find /workspace/results/outputs -path '*ckpts/last.ckpt' -print | sort | tail -n 1 | sed 's#/ckpts/last.ckpt##')"
 echo "${B_TRIAL}" > /workspace/results/object_b_trial.txt
-python launch.py \
+python /workspace/threestudio/launch.py \
   --config "${B_TRIAL}/configs/parsed.yaml" \
   --test --gpu 0 \
   resume="${B_TRIAL}/ckpts/last.ckpt" \
   2>&1 | tee /workspace/results/object_b_threestudio_test.log || true
-python launch.py \
+python /workspace/threestudio/launch.py \
   --config "${B_TRIAL}/configs/parsed.yaml" \
   --export --gpu 0 \
   resume="${B_TRIAL}/ckpts/last.ckpt" \
@@ -166,7 +166,7 @@ python - <<'PY'
 from pathlib import Path
 import urllib.request
 
-out = Path("load/zero123/stable_zero123.ckpt")
+out = Path("/workspace/results/load/zero123/stable_zero123.ckpt")
 out.parent.mkdir(parents=True, exist_ok=True)
 if not out.exists():
     # Hugging Face 的 resolve URL 当前无需 token 时可直接下载；若未来需要授权，
@@ -177,21 +177,21 @@ if not out.exists():
 print(out, out.stat().st_size)
 PY
 
-python launch.py \
-  --config configs/stable-zero123.yaml \
+python /workspace/threestudio/launch.py \
+  --config /workspace/threestudio/configs/stable-zero123.yaml \
   --train --gpu 0 \
-  data.image_path=./load/images/hw3_object_c_rgba.png \
+  data.image_path=/workspace/results/load/zero123/hw3_object_c_rgba.png \
   trainer.max_steps="${C_STEPS}" \
   2>&1 | tee /workspace/results/object_c_zero123_train.log
 
-C_TRIAL="$(find outputs -path '*ckpts/last.ckpt' -print | sort | tail -n 1 | sed 's#/ckpts/last.ckpt##')"
+C_TRIAL="$(find /workspace/results/outputs -path '*ckpts/last.ckpt' -print | sort | tail -n 1 | sed 's#/ckpts/last.ckpt##')"
 echo "${C_TRIAL}" > /workspace/results/object_c_trial.txt
-python launch.py \
+python /workspace/threestudio/launch.py \
   --config "${C_TRIAL}/configs/parsed.yaml" \
   --test --gpu 0 \
   resume="${C_TRIAL}/ckpts/last.ckpt" \
   2>&1 | tee /workspace/results/object_c_zero123_test.log || true
-python launch.py \
+python /workspace/threestudio/launch.py \
   --config "${C_TRIAL}/configs/parsed.yaml" \
   --export --gpu 0 \
   resume="${C_TRIAL}/ckpts/last.ckpt" \
@@ -202,7 +202,7 @@ echo "===== Collect artifacts ====="
 mkdir -p /workspace/results/object_b /workspace/results/object_c
 cp -r "${B_TRIAL}" /workspace/results/object_b/trial || true
 cp -r "${C_TRIAL}" /workspace/results/object_c/trial || true
-cp load/images/hw3_object_c_rgba.png /workspace/results/object_c/input_rgba.png || true
+cp /workspace/results/load/zero123/hw3_object_c_rgba.png /workspace/results/object_c/input_rgba.png || true
 find /workspace/results -maxdepth 5 -type f | sort > /workspace/results/artifact_index.txt
 EOS
 
