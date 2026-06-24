@@ -32,6 +32,8 @@ LOG_DIR="/var/log/aigc-hw3-full"
 RESULT_DIR="${WORK_ROOT}/results"
 
 mkdir -p "${WORK_ROOT}" "${LOG_DIR}" "${RESULT_DIR}"
+chmod 777 "${RESULT_DIR}"
+chown 1000:1000 "${RESULT_DIR}" || true
 exec > >(tee -a "${LOG_DIR}/cloud-init.log") 2>&1
 
 echo "===== AIGC HW3 full asset generation ====="
