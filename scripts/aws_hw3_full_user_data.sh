@@ -53,9 +53,11 @@ from pathlib import Path
 dockerfile = Path("threestudio/docker/Dockerfile")
 text = dockerfile.read_text(encoding="utf-8")
 text = text.replace(
-    "FROM nvidia/cuda:11.8.0-devel-ubuntu22.04",
-    "FROM nvidia/cuda:11.8.0-devel-ubuntu22.04\n"
-    "ENV TORCH_CUDA_ARCH_LIST=8.9\n"
+    'ENV TORCH_CUDA_ARCH_LIST="6.0 6.1 7.0 7.5 8.0 8.6 8.9 9.0+PTX"',
+    'ENV TORCH_CUDA_ARCH_LIST="8.9"',
+)
+text = text.replace(
+    "ENV TCNN_CUDA_ARCHITECTURES=90;89;86;80;75;70;61;60",
     "ENV TCNN_CUDA_ARCHITECTURES=89",
 )
 text = text.replace(
