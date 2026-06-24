@@ -2,6 +2,17 @@
 
 本仓库完成 `HW3_深度学习与空间智能.pdf` 的第一个 3D / AIGC 3D 任务。项目实现一个本机可运行的教学版 3D Gaussian Splatting：从多视角图片学习一组 3D 高斯点，训练后导出模型权重并渲染测试视角。
 
+## 题目要求对应关系
+
+为便于检查，代码中按题目要求保留了明确入口：
+
+- 3D 资产准备：`src/aigc3dgs/asset_pipeline.py`
+- 背景场景重建：`src/aigc3dgs/train.py`
+- 场景融合与渲染：`src/aigc3dgs/fusion_scene.py`、`src/aigc3dgs/render.py`
+- 质量评估与技术报告：`src/aigc3dgs/evaluate_quality.py`、`report.md`
+
+当前交付包完整实现并训练了多视角 3DGS 分支；threestudio/SDS 文本生成 3D 和 Zero123 单图生成 3D 分支以资产接入清单、融合接口和质量评估对照的形式保留，便于后续替换为真实外部生成资产。
+
 ## 环境配置
 
 建议使用 Python 3.11 或 3.12，并始终通过项目本地 `.venv` 运行。
@@ -92,6 +103,26 @@ AWS user-data 脚本默认质量训练档为 `10000` steps、`512` 个高斯、`
 .\.venv\Scripts\python.exe -m aigc3dgs.render --checkpoint runs/toy_3dgs/checkpoints/model_final.pth --data data/toy_scene --out runs/toy_3dgs/test_renders --image-size 96
 ```
 
+## 资产、融合和评估辅助命令
+
+生成 A/B/C 三类 3D 资产准备清单：
+
+```powershell
+.\.venv\Scripts\python.exe -m aigc3dgs.asset_pipeline --out runs/asset_pipeline_manifest.json
+```
+
+生成 A/B/C 资产与背景场景的融合清单：
+
+```powershell
+.\.venv\Scripts\python.exe -m aigc3dgs.fusion_scene --out runs/fusion_manifest.json
+```
+
+生成质量评估 Markdown 表：
+
+```powershell
+.\.venv\Scripts\python.exe -m aigc3dgs.evaluate_quality --out runs/quality_evaluation.md
+```
+
 ## Slurm / 集群训练
 
 仓库提供了轻量训练 Slurm 脚本：
@@ -126,6 +157,9 @@ sbatch slurm/train_toy_gpu_aws.sbatch
 ## 目录说明
 
 - `src/aigc3dgs/`：核心代码。
+  - `asset_pipeline.py`：题目一 1，A/B/C 三类 3D 资产准备流程清单。
+  - `fusion_scene.py`：题目一 3，资产与背景场景融合清单。
+  - `evaluate_quality.py`：题目一 4，三类生成路线质量评估表。
 - `slurm/`：集群训练提交脚本。
 - `scripts/`：辅助说明和提交提示。
 - `data/`：本地数据目录，不纳入版本管理。

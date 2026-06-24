@@ -41,7 +41,7 @@
 
 ## Current Status
 
-项目已完成代码、文档、样例数据 GPU 训练验证、模型权重产出、本地 Git 提交、GitHub public 仓库推送、集群训练脚本、AWS EC2 训练说明、AWS CLI/profile 配置验证，并新增换机续作交接文档。AWS 质量迭代训练已完成，当前最佳成果为 `weights/aws_ec2_toy_3dgs_q2_20k_1024/`，配置 `20000 steps / 1024 gaussians / 128x128`，final loss `0.00914205`。
+项目已完成代码、文档、样例数据 GPU 训练验证、模型权重产出、本地 Git 提交、GitHub public 仓库推送、集群训练脚本、AWS EC2 训练说明、AWS CLI/profile 配置验证，并新增换机续作交接文档。AWS 质量迭代训练已完成，当前最佳成果为 `weights/aws_ec2_toy_3dgs_q2_20k_1024/`，配置 `20000 steps / 1024 gaussians / 128x128`，final loss `0.00914205`。针对交付反馈“题目一 1/3/4 在 zip 的代码和报告里没看到”，已补充资产准备、场景融合和质量评估三个代码入口，并更新报告中的要求映射。
 
 ## Recent Changes
 
@@ -78,12 +78,16 @@
 - 根据用户要求统一 `report.md` 的实验叙述口径，不再同时写“本机环境”和“AWS 环境”两套表述，改为统一 GPU 训练流程并突出最终 q2 结果。
 - 按用户要求准备最终交付压缩包，交付内容限定为代码、Markdown 实验报告、最终模型权重、最小样例数据和运行说明，排除虚拟环境、缓存、大数据包、训练中间输出和 AWS 临时文件。
 - 根据用户要求重写 `report.md` 为更详细的 `AIGC-3DGS-Fusion` 项目报告，去除“第一个作业/第一个任务”等表述，并同步更新交付包中的报告和 README。
+- 根据交付反馈补充题目一 1/3/4 的显式代码入口：`asset_pipeline.py` 生成 A/B/C 资产准备清单，`fusion_scene.py` 生成资产与背景融合清单，`evaluate_quality.py` 生成质量评估表。
+- 更新 `report.md`，新增项目范围与要求映射、3D 资产准备、场景融合与渲染、质量评估与方法对比等章节，明确哪些分支已训练复现，哪些分支作为 threestudio/Zero123 外部生成资产接入。
+- 更新 `README.md`，增加题目要求对应关系和新增辅助命令。
+- 重新同步交付目录并生成修正版压缩包 `deliverables/AIGC-3DGS-Fusion-final-fixed.zip`。
 
 ## Next TODO
 
 - 换电脑后可直接从 GitHub public 仓库拉取项目，并按 `HANDOFF.md` 恢复 `.venv`、验证 GPU。
 - AWS/Slurm 提交需要在有 `sbatch` 的集群环境执行。
-- 最终交付包已更新为详细项目报告版本，可直接发送。
+- 最终交付包已更新为包含题目一 1/3/4 显式代码和报告映射的修正版，可发送 `deliverables/AIGC-3DGS-Fusion-final-fixed.zip`。
 
 ## Open Issues
 
@@ -92,6 +96,7 @@
 - 当前 Windows 本机没有 `sbatch`，不能直接提交 Slurm 作业；需在集群登录节点运行提交命令。
 - 用户曾在对话中暴露 AWS Access Key/Secret，必须在 AWS IAM 中禁用/删除后重新生成，不能继续使用暴露密钥。
 - 本地 `runs/aws_ec2_toy_3dgs/` 中保存了 AWS 渲染图，但 `runs/` 仍按 `.gitignore` 作为可再生成输出不提交。
+- 修正版交付包诚实标注：A 多视角 3DGS 分支已实际训练，B/C 的 threestudio 与 Zero123 分支提供接入清单和融合接口，未伪称已经完成外部长训练生成结果。
 
 ## Architecture Decisions
 
@@ -104,3 +109,4 @@
 - AWS EC2 质量训练权重整理到 `weights/aws_ec2_toy_3dgs_quality`，作为当前推荐最终交付权重入库。
 - AWS EC2 q2 质量迭代权重整理到 `weights/aws_ec2_toy_3dgs_q2_20k_1024`，作为当前最终推荐成果；q3 权重保留用于证明继续加码退化。
 - 新增 Slurm 训练脚本 `slurm/train_toy_gpu.sbatch`，默认使用 `gpu` 分区、`gpo-ifv7xx` 账号和 `normal` QOS，避免默认使用 `aws` 分区。
+- 为题目一 1/3/4 增加轻量工程接口，而不是在仓库中引入 threestudio/Zero123 的完整依赖和大模型输出；这样保持交付包小、可复现，同时给出多源资产融合的扩展路径。
